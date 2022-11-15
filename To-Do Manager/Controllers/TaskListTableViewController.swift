@@ -128,12 +128,14 @@ extension TaskListTableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
         
         let task = task(forIndexPath: indexPath)
+        guard task.status != .completed else { return }
         taskManger.update(taskId: task.id, withStatus: .completed)
         reloadData()
     }
     
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let task = task(forIndexPath: indexPath)
+        guard task.status != .planned else { return nil }
         let action = UIContextualAction(style: .normal, title: "Planned") { [weak self] _, _, _ in
             self?.taskManger.update(taskId: task.id, withStatus: .planned)
             self?.reloadData()
