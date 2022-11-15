@@ -7,116 +7,181 @@
 
 import UIKit
 
+enum SortedBy { case status, priority }
+
 class TaskListTableViewController: UITableViewController {
     
-    let taskManager: TaskManagerProtocool = TaskManager()
+    private var taskManger: TaskManagerPr = TaskManager()
+    private var tasksSortedBy: SortedBy = .status
+    private var tasks: [Task] = []
+    
+    // MARK: Life Cycle and overridden methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.leftBarButtonItem = editButtonItem
+        tasks = taskManger.getTasks()
         
-        taskManager.loadTasksFromStorage()
     }
     
+    @IBAction func sortAction(_ sender: UIBarButtonItem) {
+        let alert = UIAlertController(title: nil, message: "Sort by:", preferredStyle: .actionSheet)
+        let statusSortAction = UIAlertAction(title: "status", style: .default) { [weak self] _ in
+            self?.tasksSortedBy = .status
+            self?.tableView.reloadData()
+        }
+        let prioritySortAction = UIAlertAction(title: "priority", style: .default) { [weak self] _ in
+            self?.tasksSortedBy = .priority
+            self?.tableView.reloadData()
+        }
+        
+        alert.addAction(statusSortAction)
+        alert.addAction(prioritySortAction)
+        
+        present(alert, animated: true)
+    }
     
+    // MARK: Private methods
     
-    // MARK: - Table view data source
+    private func numberOfSections() -> Int {
+        switch tasksSortedBy {
+        case .status: return TaskStatus.allCases.count
+            case .priority: return TaskPriority.allCases.count }
+    }
+    
+    private func numberOfRows(inSection section: Int) -> Int {
+        switch tasksSortedBy {
+        case .status:
+            let status = TaskStatus(rawValue: section)
+            return tasks.filter({ $0.status == status }).count
+        case .priority:
+            let priority = TaskPriority(rawValue: section)
+            return tasks.filter({ $0.priority == priority }).count
+        }
+    }
+    
+    private func titleForHeader(inSection section: Int) -> String? {
+        switch tasksSortedBy {
+        case .status:
+            return TaskStatus(rawValue: section)?.description
+        case .priority:
+            return TaskPriority(rawValue: section)?.description
+        }
+    }
+    
+    private func task(forIndexPath indexPath: IndexPath) -> Task {
+        switch tasksSortedBy {
+        case .status:
+            let status = TaskStatus(rawValue: indexPath.section)
+            var tasksWithStatus = tasks.filter({ $0.status == status })
+            tasksWithStatus.sort { $0.priority.rawValue < $1.priority.rawValue }
+            return tasksWithStatus[indexPath.row]
+        case .priority:
+            let priority = TaskPriority(rawValue: indexPath.section)
+            var tasksWithPriority = tasks.filter({ $0.priority == priority })
+            tasksWithPriority.sort { $0.status.rawValue < $1.status.rawValue }
+            return tasksWithPriority[indexPath.row]
+        }
+    }
+    
+    private func reloadData() {
+        tasks = taskManger.getTasks()
+        tableView.reloadData()
+    }
+}
 
+// MARK: - UITableViewDataSource
+
+extension TaskListTableViewController {
+    
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return taskManager.countOfPriorityGroups
+        return numberOfSections()
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        // get preority from priorityWeights as index of array
-        let priority = taskManager.priorityWeights[section]
-        
-        // return count of tasks with this priority
-        return taskManager.tasks(withPriority: priority).count
-    }
-    
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        
-        // get preority from priorityWeights as index of array
-        let priority = taskManager.priorityWeights[section]
-        
-        switch priority {
-        case .normal:
-            return "Normal priority"
-        case .important:
-            return "Important priority"
-        }
+        return numberOfRows(inSection: section)
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        //return getConfiguredTaskCell_constrains(for: indexPath)
-        return getConfiguredTaskCell_stack(for: indexPath)
-    }
-    
-    // Configure Task Cell from prototype with tags
-    private func getConfiguredTaskCell_constrains(for indexPath: IndexPath) -> UITableViewCell {
-        // load prototype of cell by identifier
-        let cell = tableView.dequeueReusableCell(withIdentifier: "taskCellConstraints", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TaskCell", for: indexPath)
+        let task = task(forIndexPath: indexPath)
         
-        // get preority from priorityWeights as index of array
-        let priority = taskManager.priorityWeights[indexPath.section]
+        (cell as? TaskCell)?.configure(withTask: task)
         
-        // get current task by current row in table view
-        let currentTask = taskManager.tasks(withPriority: priority, sortedBy: .status)[indexPath.row]
-        
-        // get view by tag
-        let symbolLabel = cell.viewWithTag(1) as? UILabel
-        let titleLabel = cell.viewWithTag(2) as? UILabel
-        
-        symbolLabel?.text = getSymbolForTask(with: currentTask.status)
-        titleLabel?.text = currentTask.title
-        
-        // set text color and symbol
-        if currentTask.status == .planned {
-            titleLabel?.textColor = .black
-            symbolLabel?.textColor = .black
-        } else {
-            titleLabel?.textColor = .lightGray
-            symbolLabel?.textColor = .lightGray
-        }
-    
         return cell
     }
-    // Configure Custop Task Cell from prototype with stack 
-    private func getConfiguredTaskCell_stack(for indexPath: IndexPath) -> UITableViewCell {
-        // load prototype of cell by identifier
-        let cell = tableView.dequeueReusableCell(withIdentifier: "taskCellStack", for: indexPath) as! TaskCell
-        
-        // get preority from priorityWeights as index of array
-        let priority = taskManager.priorityWeights[indexPath.section]
-        
-        // get current task by current row in table view
-        let currentTask = taskManager.tasks(withPriority: priority, sortedBy: .status)[indexPath.row]
-        
-        cell.symbol.text = getSymbolForTask(with: currentTask.status)
-        cell.title.text = currentTask.title
-        
-        // set text color and symbol
-        if currentTask.status == .planned {
-            cell.title.textColor = .black
-            cell.symbol.textColor = .black
-        } else {
-            cell.title.textColor = .lightGray
-            cell.symbol.textColor = .lightGray
-        }
     
-        return cell
-        
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return titleForHeader(inSection: section)
     }
     
-    // return the symbol for the corresponding task type
-    private func getSymbolForTask(with status: TaskStatus) -> String {
-        switch status {
-        case .planned:
-            return "\u{25CB}" // ○
-        case .completed:
-            return "\u{25C9}" // ◉
-        }
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 30
     }
- 
 }
 
+// MARK: - UITableViewDelegate
+
+extension TaskListTableViewController {
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        let task = task(forIndexPath: indexPath)
+        taskManger.update(taskId: task.id, withStatus: .completed)
+        reloadData()
+    }
+    
+    override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let task = task(forIndexPath: indexPath)
+        let action = UIContextualAction(style: .normal, title: "Planned") { [weak self] _, _, _ in
+            self?.taskManger.update(taskId: task.id, withStatus: .planned)
+            self?.reloadData()
+        }
+        return UISwipeActionsConfiguration(actions: [action])
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        let task = task(forIndexPath: indexPath)
+        
+        if case .delete = editingStyle {
+            taskManger.remove(taskId: task.id)
+            reloadData()
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        let sourceTask = task(forIndexPath: sourceIndexPath)
+        let destinStatus = TaskStatus(rawValue: destinationIndexPath.section)
+        let destinPriority = TaskPriority(rawValue: destinationIndexPath.section)
+        
+        switch tasksSortedBy {
+        case .status:
+            if let destinStatus, sourceTask.status != destinStatus {
+                taskManger.update(taskId: sourceTask.id, withStatus: destinStatus)
+                reloadData()
+            }
+        case .priority:
+            if let destinPriority, sourceTask.priority != destinPriority {
+                taskManger.update(taskId: sourceTask.id, withPriority: destinPriority)
+                reloadData()
+            }
+        }
+    }
+}
+
+fileprivate extension TaskStatus {
+    var description: String {
+        switch self {
+        case .planned: return "planned"
+        case .completed: return "completed"}
+    }
+}
+
+fileprivate extension TaskPriority {
+    var description: String {
+        switch self {
+        case .normal: return "normal"
+        case .important: return "important"}
+    }
+}

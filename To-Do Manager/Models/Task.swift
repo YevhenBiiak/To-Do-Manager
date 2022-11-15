@@ -5,29 +5,22 @@
 //  Created by Евгений Бияк on 25.05.2022.
 //
 
-
+import Foundation
 
 // priority types of task
-enum TaskPriority {
-    case normal
+enum TaskPriority: Int, CaseIterable {
     case important
+    case normal
 }
 
 // complition status of task
-enum TaskStatus {
+enum TaskStatus: Int, CaseIterable {
     case planned
     case completed
 }
 
-// task protocol
-protocol TaskProtocol {
-    var title:    String       { get set }
-    var priority: TaskPriority { get set }
-    var status:   TaskStatus   { get set }
-}
-
-
-struct Task: TaskProtocol {
+struct Task {
+    let id = UUID().uuidString
     var title: String
     var priority: TaskPriority
     var status: TaskStatus

@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		57189A7F283AB201008D33FD /* TaskListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57189A7E283AB201008D33FD /* TaskListTableViewController.swift */; };
 		574B2D46283E15A600D20407 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = 574B2D45283E15A600D20407 /* Task.swift */; };
-		574B2D48283E17ED00D20407 /* TasksStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 574B2D47283E17ED00D20407 /* TasksStorage.swift */; };
+		574B2D48283E17ED00D20407 /* TaskStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 574B2D47283E17ED00D20407 /* TaskStorage.swift */; };
 		574B2D4B283E477000D20407 /* TaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 574B2D4A283E477000D20407 /* TaskCell.swift */; };
 		5778B7F0283FB525006D3988 /* TaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5778B7EF283FB525006D3988 /* TaskManager.swift */; };
 		57D13ACF283AAB5400F31193 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57D13ACE283AAB5400F31193 /* AppDelegate.swift */; };
@@ -22,7 +22,7 @@
 /* Begin PBXFileReference section */
 		57189A7E283AB201008D33FD /* TaskListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListTableViewController.swift; sourceTree = "<group>"; };
 		574B2D45283E15A600D20407 /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
-		574B2D47283E17ED00D20407 /* TasksStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksStorage.swift; sourceTree = "<group>"; };
+		574B2D47283E17ED00D20407 /* TaskStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskStorage.swift; sourceTree = "<group>"; };
 		574B2D4A283E477000D20407 /* TaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCell.swift; sourceTree = "<group>"; };
 		5778B7EF283FB525006D3988 /* TaskManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManager.swift; sourceTree = "<group>"; };
 		57D13ACB283AAB5400F31193 /* To-Do Manager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "To-Do Manager.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -49,18 +49,10 @@
 			isa = PBXGroup;
 			children = (
 				574B2D45283E15A600D20407 /* Task.swift */,
-				574B2D47283E17ED00D20407 /* TasksStorage.swift */,
 				5778B7EF283FB525006D3988 /* TaskManager.swift */,
+				574B2D47283E17ED00D20407 /* TaskStorage.swift */,
 			);
 			path = Models;
-			sourceTree = "<group>";
-		};
-		574B2D49283E473D00D20407 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				574B2D4C283E47EE00D20407 /* Cells */,
-			);
-			path = Views;
 			sourceTree = "<group>";
 		};
 		574B2D4C283E47EE00D20407 /* Cells */ = {
@@ -77,6 +69,14 @@
 				57189A7E283AB201008D33FD /* TaskListTableViewController.swift */,
 			);
 			path = Controllers;
+			sourceTree = "<group>";
+		};
+		57677C632923CB11000D19B3 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				574B2D4C283E47EE00D20407 /* Cells */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		57D13AC2283AAB5400F31193 = {
@@ -102,8 +102,8 @@
 				57D13ACE283AAB5400F31193 /* AppDelegate.swift */,
 				57D13AD0283AAB5400F31193 /* SceneDelegate.swift */,
 				574B2D44283E157900D20407 /* Models */,
+				57677C632923CB11000D19B3 /* Views */,
 				574B2D4D283F5EDD00D20407 /* Controllers */,
-				574B2D49283E473D00D20407 /* Views */,
 				57D13AD7283AAB5600F31193 /* Assets.xcassets */,
 				57D13AD4283AAB5400F31193 /* Main.storyboard */,
 				57D13AD9283AAB5600F31193 /* LaunchScreen.storyboard */,
@@ -121,6 +121,7 @@
 				57D13AC7283AAB5400F31193 /* Sources */,
 				57D13AC8283AAB5400F31193 /* Frameworks */,
 				57D13AC9283AAB5400F31193 /* Resources */,
+				57ABFE1828437F2100F45DB2 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -177,6 +178,27 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		57ABFE1828437F2100F45DB2 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\nif which swiftlint > /dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		57D13AC7283AAB5400F31193 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -185,7 +207,7 @@
 				574B2D46283E15A600D20407 /* Task.swift in Sources */,
 				5778B7F0283FB525006D3988 /* TaskManager.swift in Sources */,
 				57D13ACF283AAB5400F31193 /* AppDelegate.swift in Sources */,
-				574B2D48283E17ED00D20407 /* TasksStorage.swift in Sources */,
+				574B2D48283E17ED00D20407 /* TaskStorage.swift in Sources */,
 				57D13AD1283AAB5400F31193 /* SceneDelegate.swift in Sources */,
 				574B2D4B283E477000D20407 /* TaskCell.swift in Sources */,
 				57189A7F283AB201008D33FD /* TaskListTableViewController.swift in Sources */,
@@ -218,6 +240,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -278,6 +301,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -334,7 +358,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 34;
 				DEVELOPMENT_TEAM = P3BYVBK57Z;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "To-Do Manager/Info.plist";
@@ -362,7 +386,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 34;
 				DEVELOPMENT_TEAM = P3BYVBK57Z;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "To-Do Manager/Info.plist";

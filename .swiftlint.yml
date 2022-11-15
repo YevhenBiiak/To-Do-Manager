@@ -1,0 +1,7 @@
+disabled_rules:
+- switch_case_alignment
+- trailing_whitespace
+- unused_optional_binding
+
+line_length:
+- 180 # warning

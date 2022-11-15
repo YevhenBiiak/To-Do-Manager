@@ -9,18 +9,36 @@ import UIKit
 
 class TaskCell: UITableViewCell {
 
-    @IBOutlet weak var symbol: UILabel!
-    @IBOutlet weak var title: UILabel!
+    @IBOutlet weak var symbolLabel: UILabel!
+    @IBOutlet weak var titleLabel: UILabel!
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
+    func configure(withTask task: Task) {
+        symbolLabel?.text = getStatusSymbolForTask(with: task.status)
+        titleLabel?.text = task.title
+        
+        switch task.priority {
+        case .important:
+            titleLabel.font = UIFont.systemFont(ofSize: titleLabel.font.pointSize, weight: .semibold)
+        case .normal:
+            titleLabel.font = UIFont.systemFont(ofSize: titleLabel.font.pointSize, weight: .regular)
+        }
+        
+        // set text color and symbol
+        switch task.status {
+        case .planned:
+            titleLabel?.textColor = UIColor.black
+            symbolLabel?.textColor = UIColor.black
+        case .completed:
+            titleLabel?.textColor = UIColor.lightGray
+            symbolLabel?.textColor = UIColor.lightGray
+        }
     }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
+    
+    // return the symbol for the corresponding task type
+    private func getStatusSymbolForTask(with status: TaskStatus) -> String {
+        switch status {
+        case .planned:   return "\u{25CB}" // ○
+        case .completed: return "\u{25C9}" // ◉
+        }
     }
-
 }

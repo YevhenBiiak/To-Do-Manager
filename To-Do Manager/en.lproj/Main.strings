@@ -1,0 +1,24 @@
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "7ei-Gf-9ch"; */
+"7ei-Gf-9ch.text" = "Label";
+
+/* Class = "UINavigationItem"; title = "Task List"; ObjectID = "96e-Ea-S7a"; */
+"96e-Ea-S7a.title" = "Task List";
+
+/* Class = "UILabel"; text = "Пригласить на вечеринку Дольфа, Джеки, Леонардо, Уилла и Брюса"; ObjectID = "Wfh-js-mq0"; */
+"Wfh-js-mq0.text" = "Пригласить на вечеринку Дольфа, Джеки, Леонардо, Уилла и Брюса";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "aDt-ck-LhJ"; */
+"aDt-ck-LhJ.text" = "Label";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "cy9-cI-pfj"; */
+"cy9-cI-pfj.text" = "Label";
+
+/* Class = "UICommand"; title = "Item 2"; ObjectID = "jt3-q3-NB9"; */
+"jt3-q3-NB9.title" = "Item 2";
+
+/* Class = "UICommand"; title = "Item 1"; ObjectID = "rqz-x2-GbO"; */
+"rqz-x2-GbO.title" = "Item 1";
+
+/* Class = "UIBarButtonItem"; title = "Item"; ObjectID = "sWW-By-Nde"; */
+"sWW-By-Nde.title" = "Item";
