@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		57189A7F283AB201008D33FD /* TaskListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57189A7E283AB201008D33FD /* TaskListTableViewController.swift */; };
+		573DE67429250FFE0063139B /* SortViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 573DE67329250FFE0063139B /* SortViewController.swift */; };
 		574B2D46283E15A600D20407 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = 574B2D45283E15A600D20407 /* Task.swift */; };
 		574B2D48283E17ED00D20407 /* TaskStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 574B2D47283E17ED00D20407 /* TaskStorage.swift */; };
 		574B2D4B283E477000D20407 /* TaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 574B2D4A283E477000D20407 /* TaskCell.swift */; };
@@ -21,6 +22,7 @@
 
 /* Begin PBXFileReference section */
 		57189A7E283AB201008D33FD /* TaskListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListTableViewController.swift; sourceTree = "<group>"; };
+		573DE67329250FFE0063139B /* SortViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortViewController.swift; sourceTree = "<group>"; };
 		574B2D45283E15A600D20407 /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
 		574B2D47283E17ED00D20407 /* TaskStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskStorage.swift; sourceTree = "<group>"; };
 		574B2D4A283E477000D20407 /* TaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCell.swift; sourceTree = "<group>"; };
@@ -67,6 +69,7 @@
 			isa = PBXGroup;
 			children = (
 				57189A7E283AB201008D33FD /* TaskListTableViewController.swift */,
+				573DE67329250FFE0063139B /* SortViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -206,6 +209,7 @@
 			files = (
 				574B2D46283E15A600D20407 /* Task.swift in Sources */,
 				5778B7F0283FB525006D3988 /* TaskManager.swift in Sources */,
+				573DE67429250FFE0063139B /* SortViewController.swift in Sources */,
 				57D13ACF283AAB5400F31193 /* AppDelegate.swift in Sources */,
 				574B2D48283E17ED00D20407 /* TaskStorage.swift in Sources */,
 				57D13AD1283AAB5400F31193 /* SceneDelegate.swift in Sources */,

@@ -13,32 +13,24 @@ class TaskListTableViewController: UITableViewController {
     
     private var taskManger: TaskManagerPr = TaskManager()
     private var tasksSortedBy: SortedBy = .status
-    private var tasks: [Task] = []
+    private var tasks: [Task] {
+        taskManger.getTasks()
+    }
     
     // MARK: Life Cycle and overridden methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.leftBarButtonItem = editButtonItem
-        tasks = taskManger.getTasks()
-        
     }
     
-    @IBAction func sortAction(_ sender: UIBarButtonItem) {
-        let alert = UIAlertController(title: nil, message: "Sort by:", preferredStyle: .actionSheet)
-        let statusSortAction = UIAlertAction(title: "status", style: .default) { [weak self] _ in
-            self?.tasksSortedBy = .status
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let sortViewController = segue.destination as? SortViewController
+        sortViewController?.currentSortOption = tasksSortedBy
+        sortViewController?.completionHandler = { [weak self] sortOption in
+            self?.tasksSortedBy = sortOption
             self?.tableView.reloadData()
         }
-        let prioritySortAction = UIAlertAction(title: "priority", style: .default) { [weak self] _ in
-            self?.tasksSortedBy = .priority
-            self?.tableView.reloadData()
-        }
-        
-        alert.addAction(statusSortAction)
-        alert.addAction(prioritySortAction)
-        
-        present(alert, animated: true)
     }
     
     // MARK: Private methods
@@ -83,11 +75,6 @@ class TaskListTableViewController: UITableViewController {
             return tasksWithPriority[indexPath.row]
         }
     }
-    
-    private func reloadData() {
-        tasks = taskManger.getTasks()
-        tableView.reloadData()
-    }
 }
 
 // MARK: - UITableViewDataSource
@@ -130,7 +117,7 @@ extension TaskListTableViewController {
         let task = task(forIndexPath: indexPath)
         guard task.status != .completed else { return }
         taskManger.update(taskId: task.id, withStatus: .completed)
-        reloadData()
+        tableView.reloadData()
     }
     
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -138,7 +125,7 @@ extension TaskListTableViewController {
         guard task.status != .planned else { return nil }
         let action = UIContextualAction(style: .normal, title: "Planned") { [weak self] _, _, _ in
             self?.taskManger.update(taskId: task.id, withStatus: .planned)
-            self?.reloadData()
+            tableView.reloadData()
         }
         return UISwipeActionsConfiguration(actions: [action])
     }
@@ -148,11 +135,12 @@ extension TaskListTableViewController {
         
         if case .delete = editingStyle {
             taskManger.remove(taskId: task.id)
-            reloadData()
+            tableView.reloadData()
         }
     }
     
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        
         let sourceTask = task(forIndexPath: sourceIndexPath)
         let destinStatus = TaskStatus(rawValue: destinationIndexPath.section)
         let destinPriority = TaskPriority(rawValue: destinationIndexPath.section)
@@ -161,14 +149,13 @@ extension TaskListTableViewController {
         case .status:
             if let destinStatus, sourceTask.status != destinStatus {
                 taskManger.update(taskId: sourceTask.id, withStatus: destinStatus)
-                reloadData()
             }
         case .priority:
             if let destinPriority, sourceTask.priority != destinPriority {
                 taskManger.update(taskId: sourceTask.id, withPriority: destinPriority)
-                reloadData()
             }
         }
+        tableView.reloadData()
     }
 }
 
