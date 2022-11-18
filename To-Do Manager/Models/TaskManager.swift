@@ -8,6 +8,7 @@
 protocol TaskManagerPr {
     func getTasks() -> [Task]
     func addTask(title: String, priority: TaskPriority, status: TaskStatus)
+    func update(taskId: String, withTitle title: String)
     func update(taskId: String, withStatus status: TaskStatus)
     func update(taskId: String, withPriority priority: TaskPriority)
     func remove(taskId: String)
@@ -29,6 +30,12 @@ class TaskManager: TaskManagerPr {
     
     func addTask(title: String, priority: TaskPriority, status: TaskStatus) {
         tasks.append(Task(title: title, priority: priority, status: status))
+    }
+    
+    func update(taskId: String, withTitle title: String) {
+        guard let taskIndex = tasks.firstIndex(where: { $0.id == taskId })
+        else { return print("Wrong taskId") }
+        tasks[taskIndex].title = title
     }
     
     func update(taskId: String, withStatus status: TaskStatus) {

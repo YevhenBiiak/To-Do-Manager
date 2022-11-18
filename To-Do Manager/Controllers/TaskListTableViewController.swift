@@ -17,7 +17,7 @@ class TaskListTableViewController: UITableViewController {
         taskManger.getTasks()
     }
     
-    // MARK: Life Cycle and overridden methods
+    // MARK: - Life Cycle and overridden methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,11 +29,27 @@ class TaskListTableViewController: UITableViewController {
         sortViewController?.currentSortOption = tasksSortedBy
         sortViewController?.completionHandler = { [weak self] sortOption in
             self?.tasksSortedBy = sortOption
-            self?.tableView.reloadData()
+            self?.reloadDataWithAnimation()
         }
     }
     
-    // MARK: Private methods
+    @IBAction func unwindSaveAction(_ segue: UIStoryboardSegue) {
+        if let task = (segue.source as? TaskEditTableViewController)?.task {
+            if tasks.contains(where: { $0.id == task.id }) {
+                taskManger.update(taskId: task.id, withTitle: task.title)
+                taskManger.update(taskId: task.id, withStatus: task.status)
+                taskManger.update(taskId: task.id, withPriority: task.priority)
+            } else {
+                taskManger.addTask(
+                    title: task.title,
+                    priority: task.priority,
+                    status: task.status)
+            }
+            tableView.reloadData()
+        }
+    }
+    
+    // MARK: - Private methods
     
     private func numberOfSections() -> Int {
         switch tasksSortedBy {
@@ -74,6 +90,10 @@ class TaskListTableViewController: UITableViewController {
             tasksWithPriority.sort { $0.status.rawValue < $1.status.rawValue }
             return tasksWithPriority[indexPath.row]
         }
+    }
+    
+    func reloadDataWithAnimation() {
+        tableView.reloadSections(IndexSet(integersIn: 0..<tableView.numberOfSections), with: .automatic)
     }
 }
 
@@ -117,17 +137,28 @@ extension TaskListTableViewController {
         let task = task(forIndexPath: indexPath)
         guard task.status != .completed else { return }
         taskManger.update(taskId: task.id, withStatus: .completed)
-        tableView.reloadData()
+        reloadDataWithAnimation()
     }
     
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let task = task(forIndexPath: indexPath)
-        guard task.status != .planned else { return nil }
-        let action = UIContextualAction(style: .normal, title: "Planned") { [weak self] _, _, _ in
+        let changeStatus = UIContextualAction(style: .normal, title: "Planned") { [weak self] _, _, _ in
             self?.taskManger.update(taskId: task.id, withStatus: .planned)
-            tableView.reloadData()
+            self?.reloadDataWithAnimation()
         }
-        return UISwipeActionsConfiguration(actions: [action])
+        let editTask = UIContextualAction(style: .normal, title: "Edit") { [weak self] _, _, _ in
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            if let taskEditVC = storyboard.instantiateViewController(withIdentifier: "TaskEditTableViewController") as? TaskEditTableViewController {
+                taskEditVC.task = task
+                self?.navigationController?.pushViewController(taskEditVC, animated: true)
+            }
+        }
+        
+        if task.status == .planned {
+            return UISwipeActionsConfiguration(actions: [editTask])
+        } else {
+            return UISwipeActionsConfiguration(actions: [changeStatus])
+        }
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
@@ -135,7 +166,7 @@ extension TaskListTableViewController {
         
         if case .delete = editingStyle {
             taskManger.remove(taskId: task.id)
-            tableView.reloadData()
+            reloadDataWithAnimation()
         }
     }
     
