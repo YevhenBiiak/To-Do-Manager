@@ -8,19 +8,19 @@
 import Foundation
 
 // priority types of task
-enum TaskPriority: Int, CaseIterable {
+enum TaskPriority: Int, CaseIterable, Codable {
     case important
     case normal
 }
 
 // complition status of task
-enum TaskStatus: Int, CaseIterable {
+enum TaskStatus: Int, CaseIterable, Codable {
     case planned
     case completed
 }
 
-struct Task {
-    let id = UUID().uuidString
+struct Task: Codable {
+    var id = UUID().uuidString
     var title: String
     var priority: TaskPriority
     var status: TaskStatus

@@ -17,7 +17,12 @@ protocol TaskManagerPr {
 class TaskManager: TaskManagerPr {
     
     private var taskStorage: TaskStoragePr!
-    private var tasks: [Task] = []
+    private var tasks: [Task] = [] {
+        didSet {
+            tasks.sort(by: { $0.title < $1.title })
+            taskStorage.saveTasks(tasks)
+        }
+    }
     
     init(taskStorage: TaskStoragePr = TaskStorage()) {
         self.taskStorage = taskStorage
@@ -25,7 +30,7 @@ class TaskManager: TaskManagerPr {
     }
     
     func getTasks() -> [Task] {
-        tasks.sorted(by: { $0.title < $1.title })
+        tasks
     }
     
     func addTask(title: String, priority: TaskPriority, status: TaskStatus) {
