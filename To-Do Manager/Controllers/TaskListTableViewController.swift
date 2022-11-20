@@ -57,7 +57,7 @@ class TaskListTableViewController: UITableViewController, TaskListViewController
     private func numberOfSections() -> Int {
         switch tasksSortedBy {
         case .status: return TaskStatus.allCases.count
-            case .priority: return TaskPriority.allCases.count }
+        case .priority: return TaskPriority.allCases.count }
     }
     
     private func numberOfRows(inSection section: Int) -> Int {
@@ -71,12 +71,12 @@ class TaskListTableViewController: UITableViewController, TaskListViewController
         }
     }
     
-    private func titleForHeader(inSection section: Int) -> String? {
+    private func titleForHeader(inSection section: Int) -> String {
         switch tasksSortedBy {
         case .status:
-            return TaskStatus(rawValue: section)?.description
+            return TaskStatus(rawValue: section)!.description
         case .priority:
-            return TaskPriority(rawValue: section)?.description
+            return TaskPriority(rawValue: section)!.description
         }
     }
     
@@ -110,14 +110,19 @@ extension TaskListTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return numberOfRows(inSection: section)
+        return numberOfRows(inSection: section) > 0 ? numberOfRows(inSection: section) : 1
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
-        let task = task(forIndexPath: indexPath)
+        guard let cell = cell as? TaskCell else { return cell }
         
-        (cell as? TaskCell)?.configure(withTask: task)
+        if numberOfRows(inSection: indexPath.section) > 0 {
+            let task = task(forIndexPath: indexPath)
+            cell.configure(withTask: task)
+        } else {
+            cell.configure(withText: "No Tasks")
+        }
         
         return cell
     }
@@ -137,14 +142,18 @@ extension TaskListTableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        guard numberOfRows(inSection: indexPath.section) > 0 else { return }
         
         let task = task(forIndexPath: indexPath)
         guard task.status != .completed else { return }
         taskManger.update(taskId: task.id, withStatus: .completed)
+        
         reloadDataWithAnimation()
     }
     
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        guard numberOfRows(inSection: indexPath.section) > 0 else { return nil }
+        
         let task = task(forIndexPath: indexPath)
         
         let changeStatus = UIContextualAction(style: .normal, title: "Planned") { [weak self] _, _, _ in
@@ -166,6 +175,14 @@ extension TaskListTableViewController {
         }
     }
     
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        return numberOfRows(inSection: indexPath.section) > 0 ? .delete : .none
+    }
+    
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return numberOfRows(inSection: indexPath.section) > 0 ? true : false
+    }
+    
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         let task = task(forIndexPath: indexPath)
         
@@ -174,23 +191,20 @@ extension TaskListTableViewController {
             reloadDataWithAnimation()
         }
     }
-    
+
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         
         let sourceTask = task(forIndexPath: sourceIndexPath)
-        let destinStatus = TaskStatus(rawValue: destinationIndexPath.section)
-        let destinPriority = TaskPriority(rawValue: destinationIndexPath.section)
+        guard let destinStatus = TaskStatus(rawValue: destinationIndexPath.section),
+              let destinPriority = TaskPriority(rawValue: destinationIndexPath.section)
+        else { return }
         
         switch tasksSortedBy {
-        case .status:
-            if let destinStatus, sourceTask.status != destinStatus {
-                taskManger.update(taskId: sourceTask.id, withStatus: destinStatus)
-            }
-        case .priority:
-            if let destinPriority, sourceTask.priority != destinPriority {
-                taskManger.update(taskId: sourceTask.id, withPriority: destinPriority)
-            }
-        }
+        case .status where sourceTask.status != destinStatus:
+            taskManger.update(taskId: sourceTask.id, withStatus: destinStatus)
+        case .priority where sourceTask.priority != destinPriority:
+            taskManger.update(taskId: sourceTask.id, withPriority: destinPriority)
+        default: return }
         tableView.reloadData()
     }
 }

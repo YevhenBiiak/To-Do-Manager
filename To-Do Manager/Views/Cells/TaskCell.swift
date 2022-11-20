@@ -13,8 +13,8 @@ class TaskCell: UITableViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     
     func configure(withTask task: Task) {
-        symbolLabel?.text = getStatusSymbolForTask(with: task.status)
-        titleLabel?.text = task.title
+        symbolLabel.text = getStatusSymbolForTask(with: task.status)
+        titleLabel.text = task.title
         
         switch task.priority {
         case .important:
@@ -26,12 +26,23 @@ class TaskCell: UITableViewCell {
         // set text color and symbol
         switch task.status {
         case .planned:
-            titleLabel?.textColor = UIColor.label
-            symbolLabel?.textColor = UIColor.label
+            titleLabel.textColor = UIColor.label
+            symbolLabel.textColor = UIColor.label
         case .completed:
-            titleLabel?.textColor = UIColor.lightGray
-            symbolLabel?.textColor = UIColor.lightGray
+            titleLabel.textColor = UIColor.lightGray
+            symbolLabel.textColor = UIColor.lightGray
         }
+        
+        selectionStyle = .default
+    }
+    
+    func configure(withText text: String) {
+        symbolLabel.text = nil
+        titleLabel.text = text
+        titleLabel.textColor = UIColor.tertiaryLabel
+        titleLabel.font = UIFont.systemFont(ofSize: titleLabel.font.pointSize, weight: .regular)
+        
+        selectionStyle = .none
     }
     
     // return the symbol for the corresponding task type
