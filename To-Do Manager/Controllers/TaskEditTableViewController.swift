@@ -53,6 +53,17 @@ class TaskEditTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 3
     }
+    
+    // MARK: - Table view delegate
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // if the task status row is selected
+        if indexPath.row == 2 {
+            taskStatusSwitch.setOn(!taskStatusSwitch.isOn, animated: true)
+            switchDidChangeState(taskStatusSwitch)
+        }
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
 }
 
 // MARK: - fileprivate extensions for UI

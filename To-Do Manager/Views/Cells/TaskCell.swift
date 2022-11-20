@@ -26,8 +26,8 @@ class TaskCell: UITableViewCell {
         // set text color and symbol
         switch task.status {
         case .planned:
-            titleLabel?.textColor = UIColor.black
-            symbolLabel?.textColor = UIColor.black
+            titleLabel?.textColor = UIColor.label
+            symbolLabel?.textColor = UIColor.label
         case .completed:
             titleLabel?.textColor = UIColor.lightGray
             symbolLabel?.textColor = UIColor.lightGray
