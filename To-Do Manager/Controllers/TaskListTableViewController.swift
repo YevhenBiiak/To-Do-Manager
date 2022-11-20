@@ -9,9 +9,19 @@ import UIKit
 
 enum SortedBy { case status, priority }
 
-class TaskListTableViewController: UITableViewController {
+protocol TaskListViewControllerPr: NavigatableViewControllerPr {
+    var taskManger: TaskManagerPr! { get set }
+}
+
+protocol TaskEditViewControllerDelegate: AnyObject {
+    func viewController(_ viewController: UIViewController, didTapSaveButtonWithTask task: Task)
+}
+
+class TaskListTableViewController: UITableViewController, TaskListViewControllerPr {
     
-    private var taskManger: TaskManagerPr = TaskManager()
+    var taskManger: TaskManagerPr!
+    
+    private var cellIdentifier = "TaskCell"
     private var tasksSortedBy: SortedBy = .status
     private var tasks: [Task] {
         taskManger.getTasks()
@@ -24,29 +34,22 @@ class TaskListTableViewController: UITableViewController {
         navigationItem.leftBarButtonItem = editButtonItem
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let sortViewController = segue.destination as? SortViewController
-        sortViewController?.currentSortOption = tasksSortedBy
-        sortViewController?.completionHandler = { [weak self] sortOption in
+    @IBAction func sortButtonTapped(_ sender: UIBarButtonItem) {
+        var sortViewController = ViewControllerFactory.taskSortingViewController
+        
+        sortViewController.currentSortOption = tasksSortedBy
+        sortViewController.completionHandler = { [weak self] sortOption in
             self?.tasksSortedBy = sortOption
             self?.reloadDataWithAnimation()
         }
+        
+        sortViewController.present(inNavigationController: navigationController)
     }
     
-    @IBAction func unwindSaveAction(_ segue: UIStoryboardSegue) {
-        if let task = (segue.source as? TaskEditTableViewController)?.task {
-            if tasks.contains(where: { $0.id == task.id }) {
-                taskManger.update(taskId: task.id, withTitle: task.title)
-                taskManger.update(taskId: task.id, withStatus: task.status)
-                taskManger.update(taskId: task.id, withPriority: task.priority)
-            } else {
-                taskManger.addTask(
-                    title: task.title,
-                    priority: task.priority,
-                    status: task.status)
-            }
-            tableView.reloadData()
-        }
+    @IBAction func addButtonTapped(_ sender: UIBarButtonItem) {
+        var taskEditViewController = ViewControllerFactory.taskEditViewController
+        taskEditViewController.delegate = self
+        taskEditViewController.push(toNavigationController: navigationController)
     }
     
     // MARK: - Private methods
@@ -92,8 +95,9 @@ class TaskListTableViewController: UITableViewController {
         }
     }
     
-    func reloadDataWithAnimation() {
-        tableView.reloadSections(IndexSet(integersIn: 0..<tableView.numberOfSections), with: .automatic)
+    private func reloadDataWithAnimation() {
+        let indexSet = IndexSet(integersIn: 0..<tableView.numberOfSections)
+        tableView.reloadSections(indexSet, with: .automatic)
     }
 }
 
@@ -110,7 +114,7 @@ extension TaskListTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "TaskCell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
         let task = task(forIndexPath: indexPath)
         
         (cell as? TaskCell)?.configure(withTask: task)
@@ -142,16 +146,17 @@ extension TaskListTableViewController {
     
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let task = task(forIndexPath: indexPath)
+        
         let changeStatus = UIContextualAction(style: .normal, title: "Planned") { [weak self] _, _, _ in
             self?.taskManger.update(taskId: task.id, withStatus: .planned)
             self?.reloadDataWithAnimation()
         }
+        
         let editTask = UIContextualAction(style: .normal, title: "Edit") { [weak self] _, _, _ in
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            if let taskEditVC = storyboard.instantiateViewController(withIdentifier: "TaskEditTableViewController") as? TaskEditTableViewController {
-                taskEditVC.task = task
-                self?.navigationController?.pushViewController(taskEditVC, animated: true)
-            }
+            var taskEditViewController = ViewControllerFactory.taskEditViewController
+            taskEditViewController.task = task
+            taskEditViewController.delegate = self
+            taskEditViewController.push(toNavigationController: self?.navigationController)
         }
         
         if task.status == .planned {
@@ -189,6 +194,26 @@ extension TaskListTableViewController {
         tableView.reloadData()
     }
 }
+
+// MARK: - TaskEditViewControllerDelegate
+
+extension TaskListTableViewController: TaskEditViewControllerDelegate {
+    
+    func viewController(_ viewController: UIViewController, didTapSaveButtonWithTask task: Task) {
+        if tasks.contains(where: { $0.id == task.id }) {
+            taskManger.update(taskId: task.id, withTitle: task.title)
+            taskManger.update(taskId: task.id, withStatus: task.status)
+            taskManger.update(taskId: task.id, withPriority: task.priority)
+        } else {
+            taskManger.addTask(title: task.title, priority: task.priority, status: task.status)
+        }
+        
+        viewController.navigationController?.popViewController(animated: true)
+        tableView.reloadData()
+    }
+}
+
+// MARK: - fileprivate extensions for UI
 
 fileprivate extension TaskStatus {
     var description: String {

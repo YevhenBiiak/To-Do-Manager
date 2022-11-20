@@ -1,5 +1,5 @@
 //
-//  SortViewController.swift
+//  TaskSortingViewController.swift
 //  To-Do Manager
 //
 //  Created by Yevhen Biiak on 16.11.2022.
@@ -7,7 +7,12 @@
 
 import UIKit
 
-class SortViewController: UIViewController {
+protocol TaskSortingViewControllerPr: NavigatableViewControllerPr {
+    var currentSortOption: SortedBy! { get set }
+    var completionHandler: ((SortedBy) -> Void)? { get set }
+}
+
+class TaskSortingViewController: UIViewController, TaskSortingViewControllerPr {
     
     @IBOutlet weak var sortView: UIView! {
         didSet { sortView.layer.cornerRadius = 20 }

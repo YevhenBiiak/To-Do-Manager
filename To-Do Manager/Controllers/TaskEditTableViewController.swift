@@ -7,13 +7,19 @@
 
 import UIKit
 
-class TaskEditTableViewController: UITableViewController {
+protocol TaskEditViewControllerPr: NavigatableViewControllerPr {
+    var delegate: TaskEditViewControllerDelegate? { get set }
+    var task: Task? { get set }
+}
+
+class TaskEditTableViewController: UITableViewController, TaskEditViewControllerPr {
     
     @IBOutlet weak var taskTitleTextFiled: UITextField!
     @IBOutlet weak var taskPriorityLabel: UILabel!
     @IBOutlet weak var taskStatusSwitch: UISwitch!
     
     var task: Task?
+    var delegate: TaskEditViewControllerDelegate?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,21 +33,18 @@ class TaskEditTableViewController: UITableViewController {
         taskStatusSwitch.isOn = task?.status == .completed
     }
     
+    @IBAction func saveButtonTapped(_ sender: UIBarButtonItem) {
+        if let task {
+            delegate?.viewController(self, didTapSaveButtonWithTask: task)
+        }
+    }
+    
     @IBAction func textFieldEditingChanged(_ sender: UITextField) {
         task?.title = sender.text ?? ""
     }
     
     @IBAction func switchDidChangeState(_ sender: UISwitch) {
         task?.status = sender.isOn ? .completed : .planned
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let taskPrioritiesVC = segue.destination as? TaskPrioritiesTableViewController
-        taskPrioritiesVC?.selectedPriority = task?.priority
-        taskPrioritiesVC?.selectionСompletion = { [weak self] priority in
-            self?.task?.priority = priority
-            self?.taskPriorityLabel.text = priority.description
-        }
     }
 
     // MARK: - Table view data source
@@ -57,13 +60,33 @@ class TaskEditTableViewController: UITableViewController {
     // MARK: - Table view delegate
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // if the task status row is selected
-        if indexPath.row == 2 {
-            taskStatusSwitch.setOn(!taskStatusSwitch.isOn, animated: true)
-            switchDidChangeState(taskStatusSwitch)
-        }
+        switch indexPath.row {
+        case 1: // task priority row selected
+            presentTaskPrioritiesViewController()
+        case 2: // task status row selected
+            toggleTaskStatus()
+        default: break }
+        
         tableView.deselectRow(at: indexPath, animated: true)
     }
+    
+    private func toggleTaskStatus() {
+        taskStatusSwitch.setOn(!taskStatusSwitch.isOn, animated: true)
+        switchDidChangeState(taskStatusSwitch)
+    }
+    
+    private func presentTaskPrioritiesViewController() {
+        var taskPrioritiesVC = ViewControllerFactory.taskPrioritiesViewController
+        
+        taskPrioritiesVC.selectedPriority = task?.priority
+        taskPrioritiesVC.selectionСompletion = { [weak self] priority in
+            self?.task?.priority = priority
+            self?.taskPriorityLabel.text = priority.description
+        }
+        
+        taskPrioritiesVC.push(toNavigationController: navigationController)
+    }
+    
 }
 
 // MARK: - fileprivate extensions for UI

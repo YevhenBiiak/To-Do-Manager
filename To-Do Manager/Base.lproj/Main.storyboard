@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="FZU-18-PTD">
-    <device id="retina6_1" orientation="portrait" appearance="dark"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="xVN-DR-APo">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
@@ -66,27 +66,29 @@
                         <rightBarButtonItems>
                             <barButtonItem systemItem="add" id="OnW-8e-TjC">
                                 <connections>
-                                    <segue destination="18W-H4-uh6" kind="show" id="uOc-Cc-Ieo"/>
+                                    <action selector="addButtonTapped:" destination="Rh8-D5-RCt" id="m72-r7-I9c"/>
                                 </connections>
                             </barButtonItem>
                             <barButtonItem title="Item" id="EfM-bR-285">
                                 <imageReference key="image" image="arrow.up.arrow.down" catalog="system" symbolScale="medium"/>
                                 <connections>
-                                    <segue destination="r4s-zU-hSj" kind="presentation" animates="NO" modalPresentationStyle="overCurrentContext" id="n4Z-VQ-TW6"/>
+                                    <action selector="sortButtonTapped:" destination="Rh8-D5-RCt" id="a6w-ra-iGd"/>
                                 </connections>
                             </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
+                    <connections>
+                        <segue destination="18W-H4-uh6" kind="show" identifier="FromTaskListToTaskEdit" id="mJN-XH-FSo"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ipi-9M-0f9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <exit id="p3b-Ma-AG4" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1578.2608695652175" y="87.723214285714278"/>
+            <point key="canvasLocation" x="2476.811594202899" y="433.92857142857139"/>
         </scene>
-        <!--Sort View Controller-->
+        <!--Task Sorting View Controller-->
         <scene sceneID="4Tp-e2-NkU">
             <objects>
-                <viewController storyboardIdentifier="SortViewController" id="r4s-zU-hSj" customClass="SortViewController" customModule="To_Do_Manager" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="TaskSortingViewController" modalPresentationStyle="overCurrentContext" id="r4s-zU-hSj" customClass="TaskSortingViewController" customModule="To_Do_Manager" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="A0i-W2-dgb">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -186,6 +188,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="b5Y-U5-Cnm"/>
+                    <nil key="simulatedTopBarMetrics"/>
                     <connections>
                         <outlet property="priorityStackView" destination="dky-cS-dvA" id="uZT-7Z-nxX"/>
                         <outlet property="sortView" destination="y9F-z2-99w" id="pCF-YN-pId"/>
@@ -194,7 +197,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Opr-ms-qk7" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2347.826086956522" y="-225"/>
+            <point key="canvasLocation" x="2477" y="1133"/>
         </scene>
         <!--Task Edit Table View Controller-->
         <scene sceneID="1Mh-J2-qxB">
@@ -255,25 +258,22 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
-                                        <connections>
-                                            <segue destination="Qdv-2b-lLH" kind="show" id="sTX-9Y-P88"/>
-                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="Tho-3J-rXA">
-                                        <rect key="frame" x="0.0" y="106" width="414" height="43.5"/>
+                                        <rect key="frame" x="0.0" y="106" width="414" height="43"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Tho-3J-rXA" id="typ-38-ZVt">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Completed" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yqz-BR-QJT">
-                                                    <rect key="frame" x="20" y="11" width="325" height="21.5"/>
+                                                    <rect key="frame" x="20" y="11" width="325" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="OIZ-8O-E4L">
-                                                    <rect key="frame" x="345" y="6.5" width="51" height="31"/>
+                                                    <rect key="frame" x="345" y="6" width="51" height="31"/>
                                                     <connections>
                                                         <action selector="switchDidChangeState:" destination="18W-H4-uh6" eventType="valueChanged" id="qYY-pf-yGP"/>
                                                     </connections>
@@ -300,7 +300,7 @@
                     <navigationItem key="navigationItem" id="D8P-mU-j1l">
                         <barButtonItem key="rightBarButtonItem" systemItem="save" id="Oge-Aw-u2W">
                             <connections>
-                                <segue destination="p3b-Ma-AG4" kind="unwind" identifier="" unwindAction="unwindSaveAction:" id="3H9-B7-Eix"/>
+                                <action selector="saveButtonTapped:" destination="18W-H4-uh6" id="1cr-SH-KlK"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -308,11 +308,12 @@
                         <outlet property="taskPriorityLabel" destination="q7e-6n-IIF" id="3Rx-jN-Ze8"/>
                         <outlet property="taskStatusSwitch" destination="OIZ-8O-E4L" id="erz-7M-YEs"/>
                         <outlet property="taskTitleTextFiled" destination="GxP-3i-diZ" id="q1A-Fr-DTG"/>
+                        <segue destination="Qdv-2b-lLH" kind="show" identifier="FromTaskEditToTaskPriorities" id="Ng8-SV-xnu"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9EV-Wn-hFM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2348" y="434"/>
+            <point key="canvasLocation" x="3257.971014492754" y="433.92857142857139"/>
         </scene>
         <!--Task Priorities Table View Controller-->
         <scene sceneID="3EU-Jt-duq">
@@ -332,25 +333,25 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vlw-G2-1QT" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3152" y="434"/>
+            <point key="canvasLocation" x="4060.8695652173915" y="433.92857142857139"/>
         </scene>
         <!--Navigation Controller-->
-        <scene sceneID="IAy-hg-Eqs">
+        <scene sceneID="61u-Q7-6iS">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="FZU-18-PTD" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="xVN-DR-APo" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="HjK-Ig-0ac">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Baa-cf-Tqv">
                         <rect key="frame" x="0.0" y="48" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="Rh8-D5-RCt" kind="relationship" relationship="rootViewController" id="hWW-ka-f5w"/>
+                        <segue destination="Rh8-D5-RCt" kind="relationship" relationship="rootViewController" id="NJx-GK-jPE"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ssb-Ep-XLr" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="KFM-SL-zwc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="668.11594202898561" y="87.723214285714278"/>
+            <point key="canvasLocation" x="1696" y="434"/>
         </scene>
     </scenes>
     <resources>

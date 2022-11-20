@@ -7,7 +7,12 @@
 
 import UIKit
 
-class TaskPrioritiesTableViewController: UITableViewController {
+protocol TaskPrioritiesViewControllerPr: NavigatableViewControllerPr {
+    var selectedPriority: TaskPriority! { get set }
+    var selectionСompletion: ((TaskPriority) -> Void)? { get set }
+}
+
+class TaskPrioritiesTableViewController: UITableViewController, TaskPrioritiesViewControllerPr {
     
     var selectedPriority: TaskPriority!
     var selectionСompletion: ((TaskPriority) -> Void)?
@@ -47,6 +52,7 @@ extension TaskPrioritiesTableViewController {
         return cell
     }
 }
+
 // MARK: - Table view delegate
 
 extension TaskPrioritiesTableViewController {
