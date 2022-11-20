@@ -35,7 +35,11 @@ class TaskEditTableViewController: UITableViewController, TaskEditViewController
     
     @IBAction func saveButtonTapped(_ sender: UIBarButtonItem) {
         if let task {
-            delegate?.viewController(self, didTapSaveButtonWithTask: task)
+            if task.title.trimmingCharacters(in: .whitespaces).isEmpty {
+                showAlert(title: "Enter the task text", message: nil)
+            } else {
+                delegate?.viewController(self, didTapSaveButtonWithTask: task)
+            }
         }
     }
     
@@ -68,6 +72,13 @@ class TaskEditTableViewController: UITableViewController, TaskEditViewController
         default: break }
         
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    private func showAlert(title: String?, message: String?) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default)
+        alert.addAction(okAction)
+        present(alert, animated: true)
     }
     
     private func toggleTaskStatus() {

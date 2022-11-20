@@ -29,8 +29,8 @@ class TaskSortingViewController: UIViewController, TaskSortingViewControllerPr {
         addGestureRecognizers()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         startShowAnimation()
     }
     
@@ -82,7 +82,7 @@ class TaskSortingViewController: UIViewController, TaskSortingViewControllerPr {
     
     private func startShowAnimation() {
         view.backgroundColor = .black.withAlphaComponent(0.0)
-        UIView.animate(withDuration: 0.2) {
+        UIView.animate(withDuration: 0.33, delay: 0.33) {
             self.view.backgroundColor = .black.withAlphaComponent(0.5)
         }
     }
