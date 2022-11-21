@@ -29,7 +29,7 @@ class TaskEditTableViewController: UITableViewController, TaskEditViewController
         }
         
         taskTitleTextFiled.text = task?.title
-        taskPriorityLabel.text = task?.priority.description
+        taskPriorityLabel.text = task?.priority.rawValue
         taskStatusSwitch.isOn = task?.status == .completed
     }
     
@@ -92,20 +92,10 @@ class TaskEditTableViewController: UITableViewController, TaskEditViewController
         taskPrioritiesVC.selectedPriority = task?.priority
         taskPrioritiesVC.selectionСompletion = { [weak self] priority in
             self?.task?.priority = priority
-            self?.taskPriorityLabel.text = priority.description
+            self?.taskPriorityLabel.text = priority.rawValue
         }
         
         taskPrioritiesVC.push(toNavigationController: navigationController)
     }
     
-}
-
-// MARK: - fileprivate extensions for UI
-
-fileprivate extension TaskPriority {
-    var description: String {
-        switch self {
-        case .normal: return "normal"
-        case .important: return "important"}
-    }
 }

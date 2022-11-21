@@ -63,10 +63,10 @@ class TaskListTableViewController: UITableViewController, TaskListViewController
     private func numberOfRows(inSection section: Int) -> Int {
         switch tasksSortedBy {
         case .status:
-            let status = TaskStatus(rawValue: section)
+            let status = TaskStatus(section: section)
             return tasks.filter({ $0.status == status }).count
         case .priority:
-            let priority = TaskPriority(rawValue: section)
+            let priority = TaskPriority(section: section)
             return tasks.filter({ $0.priority == priority }).count
         }
     }
@@ -74,21 +74,21 @@ class TaskListTableViewController: UITableViewController, TaskListViewController
     private func titleForHeader(inSection section: Int) -> String {
         switch tasksSortedBy {
         case .status:
-            return TaskStatus(rawValue: section)!.description
+            return TaskStatus(section: section).description
         case .priority:
-            return TaskPriority(rawValue: section)!.description
+            return TaskPriority(section: section).description
         }
     }
     
     private func task(forIndexPath indexPath: IndexPath) -> Task {
         switch tasksSortedBy {
         case .status:
-            let status = TaskStatus(rawValue: indexPath.section)
+            let status = TaskStatus(section: indexPath.section)
             var tasksWithStatus = tasks.filter({ $0.status == status })
             tasksWithStatus.sort { $0.priority.rawValue < $1.priority.rawValue }
             return tasksWithStatus[indexPath.row]
         case .priority:
-            let priority = TaskPriority(rawValue: indexPath.section)
+            let priority = TaskPriority(section: indexPath.section)
             var tasksWithPriority = tasks.filter({ $0.priority == priority })
             tasksWithPriority.sort { $0.status.rawValue < $1.status.rawValue }
             return tasksWithPriority[indexPath.row]
@@ -195,9 +195,8 @@ extension TaskListTableViewController {
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         
         let sourceTask = task(forIndexPath: sourceIndexPath)
-        guard let destinStatus = TaskStatus(rawValue: destinationIndexPath.section),
-              let destinPriority = TaskPriority(rawValue: destinationIndexPath.section)
-        else { return }
+        let destinStatus = TaskStatus(section: destinationIndexPath.section)
+        let destinPriority = TaskPriority(section: destinationIndexPath.section)
         
         switch tasksSortedBy {
         case .status where sourceTask.status != destinStatus:
@@ -230,17 +229,23 @@ extension TaskListTableViewController: TaskEditViewControllerDelegate {
 // MARK: - fileprivate extensions for UI
 
 fileprivate extension TaskStatus {
-    var description: String {
-        switch self {
-        case .planned: return "planned"
-        case .completed: return "completed"}
+    init(section: Int) {
+        switch section {
+        case 0: self = .planned
+        case 1: self = .completed
+        default: fatalError() }
     }
+    
+    var description: String { rawValue }
 }
 
 fileprivate extension TaskPriority {
-    var description: String {
-        switch self {
-        case .normal: return "normal"
-        case .important: return "important"}
+    init(section: Int) {
+        switch section {
+        case 0: self = .normal
+        case 1: self = .important
+        default: fatalError() }
     }
+    
+    var description: String { rawValue }
 }

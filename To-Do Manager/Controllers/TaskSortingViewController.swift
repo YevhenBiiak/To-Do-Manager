@@ -23,6 +23,8 @@ class TaskSortingViewController: UIViewController, TaskSortingViewControllerPr {
     var currentSortOption: SortedBy!
     var completionHandler: ((SortedBy) -> Void)?
     
+    // MARK: - Life Cycle and overridden methods
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         updateUI()
@@ -32,24 +34,6 @@ class TaskSortingViewController: UIViewController, TaskSortingViewControllerPr {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         startShowAnimation()
-    }
-    
-    @objc private func viewDidTap() {
-        startHideAnimation()
-    }
-    
-    @objc private func statusSortOptionTapped() {
-        currentSortOption = .status
-        completionHandler?(currentSortOption)
-        startHideAnimation()
-        updateUI()
-    }
-    
-    @objc private func prioritySortOptionTapped() {
-        currentSortOption = .priority
-        completionHandler?(currentSortOption)
-        startHideAnimation()
-        updateUI()
     }
     
     // MARK: - Private methods
@@ -70,7 +54,7 @@ class TaskSortingViewController: UIViewController, TaskSortingViewControllerPr {
     
     private func addGestureRecognizers() {
         view.addGestureRecognizer(
-            UITapGestureRecognizer(target: self, action: #selector(viewDidTap))
+            UITapGestureRecognizer(target: self, action: #selector(didTapOutside))
         )
         
         let statusTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(statusSortOptionTapped))
@@ -95,5 +79,22 @@ class TaskSortingViewController: UIViewController, TaskSortingViewControllerPr {
             self.dismiss(animated: false)
         }
     }
-
+    
+    @objc private func didTapOutside() {
+        startHideAnimation()
+    }
+    
+    @objc private func statusSortOptionTapped() {
+        currentSortOption = .status
+        completionHandler?(currentSortOption)
+        startHideAnimation()
+        updateUI()
+    }
+    
+    @objc private func prioritySortOptionTapped() {
+        currentSortOption = .priority
+        completionHandler?(currentSortOption)
+        startHideAnimation()
+        updateUI()
+    }
 }

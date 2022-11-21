@@ -5,6 +5,11 @@
 //  Created by Евгений Бияк on 26.05.2022.
 //
 
+protocol TaskStoragePr {
+    func loadTasks() -> [Task]
+    func saveTasks(_ tasks: [Task])
+}
+
 protocol TaskManagerPr {
     func getTasks() -> [Task]
     func addTask(title: String, priority: TaskPriority, status: TaskStatus)
@@ -24,7 +29,7 @@ class TaskManager: TaskManagerPr {
         }
     }
     
-    init(taskStorage: TaskStoragePr = TaskStorage()) {
+    init(taskStorage: TaskStoragePr = UserDefaultsTaskStorage()) {
         self.taskStorage = taskStorage
         tasks = taskStorage.loadTasks()
     }

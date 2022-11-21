@@ -16,7 +16,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let navigationController = UINavigationController()
         var taskListViewController = ViewControllerFactory.taskListViewController
-        taskListViewController.taskManger = TaskManager()
+        taskListViewController.taskManger = TaskManager(taskStorage: RealmTaskStorage())
         
         taskListViewController.push(toNavigationController: navigationController)
         

@@ -1,5 +1,5 @@
 //
-//  TaskStorage.swift
+//  UserDefaultsTaskStorage.swift
 //  To-Do Manager
 //
 //  Created by Евгений Бияк on 25.05.2022.
@@ -7,12 +7,7 @@
 
 import UIKit
 
-protocol TaskStoragePr {
-    func loadTasks() -> [Task]
-    func saveTasks(_ tasks: [Task])
-}
-
-class TaskStorage: TaskStoragePr {
+class UserDefaultsTaskStorage: TaskStoragePr {
     
     private let taskKey = "tasks"
     private let defaults = UserDefaults.standard
@@ -29,7 +24,7 @@ class TaskStorage: TaskStoragePr {
     }
 }
 
-extension TaskStorage {
+extension UserDefaultsTaskStorage {
     private var testTasks: [Task] {
         [ Task(title: "Купить хлеб", priority: .normal, status: .planned),
         Task(title: "Помыть кота", priority: .important, status: .planned),

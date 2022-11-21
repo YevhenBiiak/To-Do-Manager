@@ -70,9 +70,7 @@ extension TaskPrioritiesTableViewController {
 
 fileprivate extension TaskPriority {
     var title: String {
-        switch self {
-        case .normal: return "Normal"
-        case .important: return "Important"}
+        rawValue.capitalized
     }
     
     var subtitle: String {
