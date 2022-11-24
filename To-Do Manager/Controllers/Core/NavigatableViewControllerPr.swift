@@ -10,6 +10,9 @@ import UIKit
 protocol NavigatableViewControllerPr {}
 
 extension NavigatableViewControllerPr {
+    var uiViewController: UIViewController? {
+        self as? UIViewController
+    }
     
     func push(toNavigationController navigationController: UINavigationController?) {
         if let viewController = self as? UIViewController {
@@ -20,12 +23,6 @@ extension NavigatableViewControllerPr {
     func popFromNavigationController() {
         if let viewController = self as? UIViewController {
             viewController.navigationController?.popViewController(animated: true)
-        }
-    }
-    
-    func present(inNavigationController navigationController: UINavigationController?) {
-        if let viewController = self as? UIViewController {
-            navigationController?.topViewController?.present(viewController, animated: true)
         }
     }
 }

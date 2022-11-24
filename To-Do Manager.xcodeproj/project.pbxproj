@@ -8,15 +8,17 @@
 
 /* Begin PBXBuildFile section */
 		57189A7F283AB201008D33FD /* TaskListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57189A7E283AB201008D33FD /* TaskListTableViewController.swift */; };
+		573CD676292F87DD00D5B112 /* TaskApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 573CD675292F87DD00D5B112 /* TaskApiClient.swift */; };
+		573D1CBF292CFD860041BE42 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 573D1CBE292CFD860041BE42 /* Alamofire */; };
 		573DE67429250FFE0063139B /* TaskSortingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 573DE67329250FFE0063139B /* TaskSortingViewController.swift */; };
 		574B2D46283E15A600D20407 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = 574B2D45283E15A600D20407 /* Task.swift */; };
-		574B2D48283E17ED00D20407 /* UserDefaultsTaskStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 574B2D47283E17ED00D20407 /* UserDefaultsTaskStorage.swift */; };
+		574B2D48283E17ED00D20407 /* TaskStorageDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 574B2D47283E17ED00D20407 /* TaskStorageDefaults.swift */; };
 		574B2D4B283E477000D20407 /* TaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 574B2D4A283E477000D20407 /* TaskCell.swift */; };
 		576D4FC3292A3F0900CAF886 /* NavigatableViewControllerPr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 576D4FC2292A3F0900CAF886 /* NavigatableViewControllerPr.swift */; };
 		576D4FC5292A3F2D00CAF886 /* ViewControllerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 576D4FC4292A3F2D00CAF886 /* ViewControllerFactory.swift */; };
 		576D4FC8292B79B700CAF886 /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 576D4FC7292B79B700CAF886 /* Realm */; };
 		576D4FCA292B79B700CAF886 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 576D4FC9292B79B700CAF886 /* RealmSwift */; };
-		576D4FCC292B80DD00CAF886 /* RealmTaskStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 576D4FCB292B80DD00CAF886 /* RealmTaskStorage.swift */; };
+		576D4FCC292B80DD00CAF886 /* TaskStorageRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 576D4FCB292B80DD00CAF886 /* TaskStorageRealm.swift */; };
 		5778B7F0283FB525006D3988 /* TaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5778B7EF283FB525006D3988 /* TaskManager.swift */; };
 		578A8A4B29256D05002F114C /* TaskEditTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 578A8A4A29256D05002F114C /* TaskEditTableViewController.swift */; };
 		578A8A4E29279BC0002F114C /* TaskPriorityTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 578A8A4C29279BC0002F114C /* TaskPriorityTableViewCell.swift */; };
@@ -32,13 +34,14 @@
 
 /* Begin PBXFileReference section */
 		57189A7E283AB201008D33FD /* TaskListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListTableViewController.swift; sourceTree = "<group>"; };
+		573CD675292F87DD00D5B112 /* TaskApiClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskApiClient.swift; sourceTree = "<group>"; };
 		573DE67329250FFE0063139B /* TaskSortingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskSortingViewController.swift; sourceTree = "<group>"; };
 		574B2D45283E15A600D20407 /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
-		574B2D47283E17ED00D20407 /* UserDefaultsTaskStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsTaskStorage.swift; sourceTree = "<group>"; };
+		574B2D47283E17ED00D20407 /* TaskStorageDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskStorageDefaults.swift; sourceTree = "<group>"; };
 		574B2D4A283E477000D20407 /* TaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCell.swift; sourceTree = "<group>"; };
 		576D4FC2292A3F0900CAF886 /* NavigatableViewControllerPr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigatableViewControllerPr.swift; sourceTree = "<group>"; };
 		576D4FC4292A3F2D00CAF886 /* ViewControllerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerFactory.swift; sourceTree = "<group>"; };
-		576D4FCB292B80DD00CAF886 /* RealmTaskStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmTaskStorage.swift; sourceTree = "<group>"; };
+		576D4FCB292B80DD00CAF886 /* TaskStorageRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskStorageRealm.swift; sourceTree = "<group>"; };
 		5778B7EF283FB525006D3988 /* TaskManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManager.swift; sourceTree = "<group>"; };
 		578A8A4A29256D05002F114C /* TaskEditTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskEditTableViewController.swift; sourceTree = "<group>"; };
 		578A8A4C29279BC0002F114C /* TaskPriorityTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskPriorityTableViewCell.swift; sourceTree = "<group>"; };
@@ -59,6 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				573D1CBF292CFD860041BE42 /* Alamofire in Frameworks */,
 				576D4FCA292B79B700CAF886 /* RealmSwift in Frameworks */,
 				576D4FC8292B79B700CAF886 /* Realm in Frameworks */,
 			);
@@ -67,13 +71,30 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		573CD674292F878500D5B112 /* RemoteStorage */ = {
+			isa = PBXGroup;
+			children = (
+				573CD675292F87DD00D5B112 /* TaskApiClient.swift */,
+			);
+			path = RemoteStorage;
+			sourceTree = "<group>";
+		};
+		573D1CC2292E3FFC0041BE42 /* LocalStorge */ = {
+			isa = PBXGroup;
+			children = (
+				576D4FCB292B80DD00CAF886 /* TaskStorageRealm.swift */,
+				574B2D47283E17ED00D20407 /* TaskStorageDefaults.swift */,
+			);
+			path = LocalStorge;
+			sourceTree = "<group>";
+		};
 		574B2D44283E157900D20407 /* Models */ = {
 			isa = PBXGroup;
 			children = (
 				574B2D45283E15A600D20407 /* Task.swift */,
 				5778B7EF283FB525006D3988 /* TaskManager.swift */,
-				576D4FCB292B80DD00CAF886 /* RealmTaskStorage.swift */,
-				574B2D47283E17ED00D20407 /* UserDefaultsTaskStorage.swift */,
+				573CD674292F878500D5B112 /* RemoteStorage */,
+				573D1CC2292E3FFC0041BE42 /* LocalStorge */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -144,14 +165,14 @@
 		57D13ACD283AAB5400F31193 /* To-Do Manager */ = {
 			isa = PBXGroup;
 			children = (
-				57D13ADC283AAB5600F31193 /* Info.plist */,
 				57D13ACE283AAB5400F31193 /* AppDelegate.swift */,
 				57D13AD0283AAB5400F31193 /* SceneDelegate.swift */,
 				574B2D44283E157900D20407 /* Models */,
 				57677C632923CB11000D19B3 /* Views */,
 				574B2D4D283F5EDD00D20407 /* Controllers */,
-				57D13AD7283AAB5600F31193 /* Assets.xcassets */,
 				578A8A522927AD60002F114C /* Extensions */,
+				57D13ADC283AAB5600F31193 /* Info.plist */,
+				57D13AD7283AAB5600F31193 /* Assets.xcassets */,
 				57D13AD4283AAB5400F31193 /* Main.storyboard */,
 				57D13AD9283AAB5600F31193 /* LaunchScreen.storyboard */,
 			);
@@ -178,6 +199,7 @@
 			packageProductDependencies = (
 				576D4FC7292B79B700CAF886 /* Realm */,
 				576D4FC9292B79B700CAF886 /* RealmSwift */,
+				573D1CBE292CFD860041BE42 /* Alamofire */,
 			);
 			productName = "To-Do Manager";
 			productReference = 57D13ACB283AAB5400F31193 /* To-Do Manager.app */;
@@ -209,6 +231,7 @@
 			mainGroup = 57D13AC2283AAB5400F31193;
 			packageReferences = (
 				576D4FC6292B79B700CAF886 /* XCRemoteSwiftPackageReference "realm-swift" */,
+				573D1CBD292CFD860041BE42 /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			productRefGroup = 57D13ACC283AAB5400F31193 /* Products */;
 			projectDirPath = "";
@@ -267,9 +290,10 @@
 				5778B7F0283FB525006D3988 /* TaskManager.swift in Sources */,
 				573DE67429250FFE0063139B /* TaskSortingViewController.swift in Sources */,
 				57D13ACF283AAB5400F31193 /* AppDelegate.swift in Sources */,
-				574B2D48283E17ED00D20407 /* UserDefaultsTaskStorage.swift in Sources */,
+				574B2D48283E17ED00D20407 /* TaskStorageDefaults.swift in Sources */,
 				576D4FC3292A3F0900CAF886 /* NavigatableViewControllerPr.swift in Sources */,
-				576D4FCC292B80DD00CAF886 /* RealmTaskStorage.swift in Sources */,
+				573CD676292F87DD00D5B112 /* TaskApiClient.swift in Sources */,
+				576D4FCC292B80DD00CAF886 /* TaskStorageRealm.swift in Sources */,
 				57D13AD1283AAB5400F31193 /* SceneDelegate.swift in Sources */,
 				574B2D4B283E477000D20407 /* TaskCell.swift in Sources */,
 				57189A7F283AB201008D33FD /* TaskListTableViewController.swift in Sources */,
@@ -495,6 +519,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		573D1CBD292CFD860041BE42 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.6.1;
+			};
+		};
 		576D4FC6292B79B700CAF886 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/realm/realm-swift.git";
@@ -506,6 +538,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		573D1CBE292CFD860041BE42 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 573D1CBD292CFD860041BE42 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
 		576D4FC7292B79B700CAF886 /* Realm */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 576D4FC6292B79B700CAF886 /* XCRemoteSwiftPackageReference "realm-swift" */;

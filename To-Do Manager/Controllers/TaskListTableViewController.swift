@@ -7,6 +7,8 @@
 
 import UIKit
 
+typealias AsyncTask = _Concurrency.Task
+
 enum SortedBy { case status, priority }
 
 protocol TaskListViewControllerPr: NavigatableViewControllerPr {
@@ -24,14 +26,23 @@ class TaskListTableViewController: UITableViewController, TaskListViewController
     private var cellIdentifier = "TaskCell"
     private var tasksSortedBy: SortedBy = .status
     private var tasks: [Task] {
-        taskManger.getTasks()
+        taskManger.tasks
     }
     
     // MARK: - Life Cycle and overridden methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        loadTasks()
+        
         navigationItem.leftBarButtonItem = editButtonItem
+        tableView.refreshControl = UIRefreshControl()
+        tableView.refreshControl?.addTarget(self, action: #selector(refreshControlAction), for: .valueChanged)
+    }
+    
+    @objc func refreshControlAction(refreshControl: UIRefreshControl) {
+        loadTasks()
+        refreshControl.endRefreshing()
     }
     
     @IBAction func sortButtonTapped(_ sender: UIBarButtonItem) {
@@ -40,10 +51,12 @@ class TaskListTableViewController: UITableViewController, TaskListViewController
         sortViewController.currentSortOption = tasksSortedBy
         sortViewController.completionHandler = { [weak self] sortOption in
             self?.tasksSortedBy = sortOption
-            self?.reloadDataWithAnimation()
+            self?.reloadData(animated: true)
         }
         
-        sortViewController.present(inNavigationController: navigationController)
+        if let viewController = sortViewController.uiViewController {
+            present(viewController, animated: false)
+        }
     }
     
     @IBAction func addButtonTapped(_ sender: UIBarButtonItem) {
@@ -53,6 +66,84 @@ class TaskListTableViewController: UITableViewController, TaskListViewController
     }
     
     // MARK: - Private methods
+    
+    private func loadTasks() {
+        AsyncTask {
+            do {
+                try await taskManger.loadTasks()
+                reloadData(animated: false)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    private func addTask(title: String, priority: TaskPriority, status: TaskStatus) {
+        AsyncTask {
+            do {
+                try await taskManger.addTask(title: title, priority: priority, status: status)
+                reloadData(animated: true)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    private func updateTask(byId id: String, withTitle title: String) {
+        AsyncTask {
+            do {
+                try await taskManger.updateTask(byId: id, withTitle: title)
+                reloadData(animated: true)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    private func updateTask(byId id: String, withStatus status: TaskStatus) {
+        AsyncTask {
+            do {
+                try await taskManger.updateTask(byId: id, withStatus: status)
+                reloadData(animated: true)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    private func updateTask(byId id: String, withPriority priority: TaskPriority) {
+        AsyncTask {
+            do {
+                try await taskManger.updateTask(byId: id, withPriority: priority)
+                reloadData(animated: true)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    private func removeTask(byId id: String) {
+        AsyncTask {
+            do {
+                try await taskManger.removeTask(byId: id)
+                reloadData(animated: true)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    @MainActor
+    private func reloadData(animated: Bool = false) {
+        if animated {
+            let indexSet = IndexSet(integersIn: 0..<tableView.numberOfSections)
+            tableView.reloadSections(indexSet, with: .automatic)
+        } else {
+            tableView.reloadData()
+        }
+    }
+    
+    // MARK: - Helper methods for TableView DataSource
     
     private func numberOfSections() -> Int {
         switch tasksSortedBy {
@@ -93,11 +184,6 @@ class TaskListTableViewController: UITableViewController, TaskListViewController
             tasksWithPriority.sort { $0.status.rawValue < $1.status.rawValue }
             return tasksWithPriority[indexPath.row]
         }
-    }
-    
-    private func reloadDataWithAnimation() {
-        let indexSet = IndexSet(integersIn: 0..<tableView.numberOfSections)
-        tableView.reloadSections(indexSet, with: .automatic)
     }
 }
 
@@ -146,9 +232,7 @@ extension TaskListTableViewController {
         
         let task = task(forIndexPath: indexPath)
         guard task.status != .completed else { return }
-        taskManger.update(taskId: task.id, withStatus: .completed)
-        
-        reloadDataWithAnimation()
+        updateTask(byId: task.id, withStatus: .completed)
     }
     
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -157,8 +241,7 @@ extension TaskListTableViewController {
         let task = task(forIndexPath: indexPath)
         
         let changeStatus = UIContextualAction(style: .normal, title: "Planned") { [weak self] _, _, _ in
-            self?.taskManger.update(taskId: task.id, withStatus: .planned)
-            self?.reloadDataWithAnimation()
+            self?.updateTask(byId: task.id, withStatus: .planned)
         }
         
         let editTask = UIContextualAction(style: .normal, title: "Edit") { [weak self] _, _, _ in
@@ -187,8 +270,7 @@ extension TaskListTableViewController {
         let task = task(forIndexPath: indexPath)
         
         if case .delete = editingStyle {
-            taskManger.remove(taskId: task.id)
-            reloadDataWithAnimation()
+            removeTask(byId: task.id)
         }
     }
 
@@ -200,11 +282,12 @@ extension TaskListTableViewController {
         
         switch tasksSortedBy {
         case .status where sourceTask.status != destinStatus:
-            taskManger.update(taskId: sourceTask.id, withStatus: destinStatus)
+            updateTask(byId: sourceTask.id, withStatus: destinStatus)
         case .priority where sourceTask.priority != destinPriority:
-            taskManger.update(taskId: sourceTask.id, withPriority: destinPriority)
+            updateTask(byId: sourceTask.id, withPriority: destinPriority)
         default: return }
-        tableView.reloadData()
+        
+        reloadData()
     }
 }
 
@@ -214,15 +297,17 @@ extension TaskListTableViewController: TaskEditViewControllerDelegate {
     
     func viewController(_ viewController: UIViewController, didTapSaveButtonWithTask task: Task) {
         if tasks.contains(where: { $0.id == task.id }) {
-            taskManger.update(taskId: task.id, withTitle: task.title)
-            taskManger.update(taskId: task.id, withStatus: task.status)
-            taskManger.update(taskId: task.id, withPriority: task.priority)
+            // if it was an edit operation
+            updateTask(byId: task.id, withTitle: task.title)
+            updateTask(byId: task.id, withStatus: task.status)
+            updateTask(byId: task.id, withPriority: task.priority)
         } else {
-            taskManger.addTask(title: task.title, priority: task.priority, status: task.status)
+            // else it was an create operation
+            addTask(title: task.title, priority: task.priority, status: task.status)
         }
         
         viewController.navigationController?.popViewController(animated: true)
-        tableView.reloadData()
+        reloadData()
     }
 }
 
