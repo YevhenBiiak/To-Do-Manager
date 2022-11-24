@@ -88,6 +88,7 @@ class TaskApiClient: TaskRepositoryPr {
     }
     
     func updateTask(byId id: String, withStatus status: TaskStatus) async throws {
+        
         let url = "\(baseURL)/\(id)"
         let params: [String: Any] = ["completed": true]
         let headers: HTTPHeaders = [.contentType("application/json")]

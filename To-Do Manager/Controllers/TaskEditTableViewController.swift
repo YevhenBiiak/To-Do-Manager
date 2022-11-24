@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol TaskEditViewControllerDelegate: AnyObject {
+    func viewController(_ viewController: TaskEditViewControllerPr, didTapSaveButtonWithTask task: Task)
+}
+
 protocol TaskEditViewControllerPr: NavigatableViewControllerPr {
     var delegate: TaskEditViewControllerDelegate? { get set }
     var task: Task? { get set }
@@ -19,7 +23,7 @@ class TaskEditTableViewController: UITableViewController, TaskEditViewController
     @IBOutlet weak var taskStatusSwitch: UISwitch!
     
     var task: Task?
-    var delegate: TaskEditViewControllerDelegate?
+    weak var delegate: TaskEditViewControllerDelegate?
 
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -16,16 +16,6 @@ protocol TaskRepositoryPr {
     func removeTask(byId id: String) async throws
 }
 
-protocol TaskManagerPr {
-    var tasks: [Task] { get }
-    func loadTasks() async throws
-    func addTask(title: String, priority: TaskPriority, status: TaskStatus) async throws
-    func updateTask(byId id: String, withTitle title: String) async throws
-    func updateTask(byId id: String, withStatus status: TaskStatus) async throws
-    func updateTask(byId id: String, withPriority priority: TaskPriority) async throws
-    func removeTask(byId id: String) async throws
-}
-
 enum TaskManagerError: Error, LocalizedError {
     case wrongTaskId
     var errorDescription: String? {

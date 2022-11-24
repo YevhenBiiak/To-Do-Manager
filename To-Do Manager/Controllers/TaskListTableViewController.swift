@@ -9,15 +9,21 @@ import UIKit
 
 typealias AsyncTask = _Concurrency.Task
 
-enum SortedBy { case status, priority }
+protocol TaskManagerPr {
+    var tasks: [Task] { get }
+    func loadTasks() async throws
+    func addTask(title: String, priority: TaskPriority, status: TaskStatus) async throws
+    func updateTask(byId id: String, withTitle title: String) async throws
+    func updateTask(byId id: String, withStatus status: TaskStatus) async throws
+    func updateTask(byId id: String, withPriority priority: TaskPriority) async throws
+    func removeTask(byId id: String) async throws
+}
 
 protocol TaskListViewControllerPr: NavigatableViewControllerPr {
     var taskManger: TaskManagerPr! { get set }
 }
 
-protocol TaskEditViewControllerDelegate: AnyObject {
-    func viewController(_ viewController: UIViewController, didTapSaveButtonWithTask task: Task)
-}
+enum SortedBy { case status, priority }
 
 class TaskListTableViewController: UITableViewController, TaskListViewControllerPr {
     
@@ -296,7 +302,7 @@ extension TaskListTableViewController {
 
 extension TaskListTableViewController: TaskEditViewControllerDelegate {
     
-    func viewController(_ viewController: UIViewController, didTapSaveButtonWithTask task: Task) {
+    func viewController(_ viewController: TaskEditViewControllerPr, didTapSaveButtonWithTask task: Task) {
         if tasks.contains(where: { $0.id == task.id }) {
             // if it was an edit operation
             updateTask(byId: task.id, withTitle: task.title)
@@ -307,7 +313,7 @@ extension TaskListTableViewController: TaskEditViewControllerDelegate {
             addTask(title: task.title, priority: task.priority, status: task.status)
         }
         
-        viewController.navigationController?.popViewController(animated: true)
+        viewController.popFromNavigationController()
         reloadData()
     }
 }
