@@ -2,7 +2,7 @@
 //  TaskCell.swift
 //  To-Do Manager
 //
-//  Created by Евгений Бияк on 25.05.2022.
+//  Created by Yevhen Biiak on 25.05.2022.
 //
 
 import UIKit

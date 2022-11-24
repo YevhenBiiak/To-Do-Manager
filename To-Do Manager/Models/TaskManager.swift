@@ -2,8 +2,10 @@
 //  TasksManager.swift
 //  To-Do Manager
 //
-//  Created by Евгений Бияк on 26.05.2022.
+//  Created by Yevhen Biiak on 26.05.2022.
 //
+
+import Foundation
 
 protocol TaskRepositoryPr {
     func loadTasks() async throws -> [Task]
@@ -22,6 +24,14 @@ protocol TaskManagerPr {
     func updateTask(byId id: String, withStatus status: TaskStatus) async throws
     func updateTask(byId id: String, withPriority priority: TaskPriority) async throws
     func removeTask(byId id: String) async throws
+}
+
+enum TaskManagerError: Error, LocalizedError {
+    case wrongTaskId
+    var errorDescription: String? {
+        switch self {
+        case .wrongTaskId: return "Wrong task id." }
+    }
 }
 
 class TaskManager: TaskManagerPr {
@@ -47,7 +57,7 @@ class TaskManager: TaskManagerPr {
     
     func updateTask(byId id: String, withTitle title: String) async throws {
         guard let taskIndex = tasks.firstIndex(where: { $0.id == id }) else {
-            return print("Wrong taskId")
+            throw TaskManagerError.wrongTaskId
         }
         try await taskRepository.updateTask(byId: id, withTitle: title)
         tasks[taskIndex].title = title
@@ -55,7 +65,7 @@ class TaskManager: TaskManagerPr {
     
     func updateTask(byId id: String, withStatus status: TaskStatus) async throws {
         guard let taskIndex = tasks.firstIndex(where: { $0.id == id }) else {
-            return print("Wrong taskId")
+            throw TaskManagerError.wrongTaskId
         }
         try await taskRepository.updateTask(byId: id, withStatus: status)
         tasks[taskIndex].status = status
@@ -63,7 +73,7 @@ class TaskManager: TaskManagerPr {
     
     func updateTask(byId id: String, withPriority priority: TaskPriority) async throws {
         guard let taskIndex = tasks.firstIndex(where: { $0.id == id }) else {
-            return print("Wrong taskId")
+            throw TaskManagerError.wrongTaskId
         }
         try await taskRepository.updateTask(byId: id, withPriority: priority)
         tasks[taskIndex].priority = priority
@@ -71,7 +81,7 @@ class TaskManager: TaskManagerPr {
     
     func removeTask(byId id: String) async throws {
         guard let taskIndex = tasks.firstIndex(where: { $0.id == id }) else {
-            return print("Wrong taskId")
+            throw TaskManagerError.wrongTaskId
         }
         try await taskRepository.removeTask(byId: id)
         tasks.remove(at: taskIndex)

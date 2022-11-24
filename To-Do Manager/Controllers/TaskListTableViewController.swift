@@ -2,7 +2,7 @@
 //  TaskListController.swift
 //  To-Do Manager
 //
-//  Created by Евгений Бияк on 22.05.2022.
+//  Created by Yevhen Biiak on 22.05.2022.
 //
 
 import UIKit
@@ -73,7 +73,8 @@ class TaskListTableViewController: UITableViewController, TaskListViewController
                 try await taskManger.loadTasks()
                 reloadData(animated: false)
             } catch {
-                print(error.localizedDescription)
+                showAlert(title: error.localizedDescription, message: nil)
+                reloadData(animated: true)
             }
         }
     }
@@ -84,7 +85,7 @@ class TaskListTableViewController: UITableViewController, TaskListViewController
                 try await taskManger.addTask(title: title, priority: priority, status: status)
                 reloadData(animated: true)
             } catch {
-                print(error.localizedDescription)
+                showAlert(title: error.localizedDescription, message: nil)
             }
         }
     }
@@ -95,7 +96,7 @@ class TaskListTableViewController: UITableViewController, TaskListViewController
                 try await taskManger.updateTask(byId: id, withTitle: title)
                 reloadData(animated: true)
             } catch {
-                print(error.localizedDescription)
+                showAlert(title: error.localizedDescription, message: nil)
             }
         }
     }
@@ -106,7 +107,7 @@ class TaskListTableViewController: UITableViewController, TaskListViewController
                 try await taskManger.updateTask(byId: id, withStatus: status)
                 reloadData(animated: true)
             } catch {
-                print(error.localizedDescription)
+                showAlert(title: error.localizedDescription, message: nil)
             }
         }
     }
@@ -117,7 +118,7 @@ class TaskListTableViewController: UITableViewController, TaskListViewController
                 try await taskManger.updateTask(byId: id, withPriority: priority)
                 reloadData(animated: true)
             } catch {
-                print(error.localizedDescription)
+                showAlert(title: error.localizedDescription, message: nil)
             }
         }
     }
@@ -128,7 +129,7 @@ class TaskListTableViewController: UITableViewController, TaskListViewController
                 try await taskManger.removeTask(byId: id)
                 reloadData(animated: true)
             } catch {
-                print(error.localizedDescription)
+                showAlert(title: error.localizedDescription, message: nil)
             }
         }
     }
@@ -143,7 +144,7 @@ class TaskListTableViewController: UITableViewController, TaskListViewController
         }
     }
     
-    // MARK: - Helper methods for TableView DataSource
+    // MARK: - Helper private methods for TableView DataSource
     
     private func numberOfSections() -> Int {
         switch tasksSortedBy {
