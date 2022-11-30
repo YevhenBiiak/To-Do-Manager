@@ -24,7 +24,7 @@ class TaskObject: Object {
 }
 
 @MainActor
-class TaskStorageRealm: TaskRepositoryPr {
+class TaskStorageRealm: TaskStoragePr {
     
     private let realm: Realm! = try? Realm()
     private var taskObjects: Results<TaskObject>!
@@ -59,7 +59,7 @@ class TaskStorageRealm: TaskRepositoryPr {
             query.id == id
         }
         try realm.write {
-            taskToUpdate.first?.status = status.rawValue
+            taskToUpdate.first?.status = status.string
         }
     }
     
@@ -68,7 +68,7 @@ class TaskStorageRealm: TaskRepositoryPr {
             query.id == id
         }
         try realm.write {
-            taskToUpdate.first?.priority = priority.rawValue
+            taskToUpdate.first?.priority = priority.string
         }
     }
     
@@ -84,8 +84,8 @@ class TaskStorageRealm: TaskRepositoryPr {
 
 private extension TaskObject {
     var convertToTask: Task? {
-        guard let priority = TaskPriority(rawValue: self.priority),
-              let status = TaskStatus(rawValue: self.status) else { return nil }
+        guard let priority = TaskPriority(string: self.priority),
+              let status = TaskStatus(string: self.status) else { return nil }
         
         return Task(id: self.id, title: self.title, priority: priority, status: status)
     }
@@ -93,6 +93,34 @@ private extension TaskObject {
 
 private extension Task {
     var convertToTaskObject: TaskObject {
-        TaskObject(id: self.id, title: self.title, priority: self.priority.rawValue, status: self.status.rawValue)
+        TaskObject(id: self.id, title: self.title, priority: self.priority.string, status: self.status.string)
+    }
+}
+
+private extension TaskStatus {
+    var string: String {
+        switch self {
+        case .planned: return "planned"
+        case .completed: return "completed" }
+    }
+    init?(string: String) {
+        switch string {
+        case "planned": self = .planned
+        case "completed": self = .completed
+        default: return nil }
+    }
+}
+
+private extension TaskPriority {
+    var string: String {
+        switch self {
+        case .important: return "important"
+        case .normal: return "normal" }
+    }
+    init?(string: String) {
+        switch string {
+        case "important": self = .important
+        case "normal": self = .normal
+        default: return nil }
     }
 }

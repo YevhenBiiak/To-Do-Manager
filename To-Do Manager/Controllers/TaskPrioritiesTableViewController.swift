@@ -66,11 +66,13 @@ extension TaskPrioritiesTableViewController {
     }
 }
 
-// MARK: - fileprivate extensions for UI
+// MARK: - Private extensions for UI
 
-fileprivate extension TaskPriority {
+private extension TaskPriority {
     var title: String {
-        rawValue.capitalized
+        switch self {
+        case .important: return "Important"
+        case .normal: return "Normal" }
     }
     
     var subtitle: String {

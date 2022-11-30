@@ -8,7 +8,7 @@
 import UIKit
 
 protocol TaskSortingViewControllerPr: NavigatableViewControllerPr {
-    var currentSortOption: SortedBy! { get set }
+    var currentSortedBy: SortedBy! { get set }
     var completionHandler: ((SortedBy) -> Void)? { get set }
 }
 
@@ -20,7 +20,7 @@ class TaskSortingViewController: UIViewController, TaskSortingViewControllerPr {
     @IBOutlet weak var statusStackView: UIStackView!
     @IBOutlet weak var priorityStackView: UIStackView!
     
-    var currentSortOption: SortedBy!
+    var currentSortedBy: SortedBy!
     var completionHandler: ((SortedBy) -> Void)?
     
     // MARK: - Life Cycle and overridden methods
@@ -39,7 +39,7 @@ class TaskSortingViewController: UIViewController, TaskSortingViewControllerPr {
     // MARK: - Private methods
     
     private func updateUI() {
-        switch currentSortOption {
+        switch currentSortedBy {
         case .status:
             priorityStackView.arrangedSubviews.first?.alpha = 0
             statusStackView.arrangedSubviews.first?.alpha = 1
@@ -85,15 +85,15 @@ class TaskSortingViewController: UIViewController, TaskSortingViewControllerPr {
     }
     
     @objc private func statusSortOptionTapped() {
-        currentSortOption = .status
-        completionHandler?(currentSortOption)
+        currentSortedBy = .status
+        completionHandler?(currentSortedBy)
         startHideAnimation()
         updateUI()
     }
     
     @objc private func prioritySortOptionTapped() {
-        currentSortOption = .priority
-        completionHandler?(currentSortOption)
+        currentSortedBy = .priority
+        completionHandler?(currentSortedBy)
         startHideAnimation()
         updateUI()
     }

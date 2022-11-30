@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol TaskRepositoryPr {
+protocol TaskStoragePr {
     func loadTasks() async throws -> [Task]
     func addTask(title: String, priority: TaskPriority, status: TaskStatus) async throws -> Task
     func updateTask(byId id: String, withTitle title: String) async throws
@@ -30,18 +30,18 @@ class TaskManager: TaskManagerPr {
         didSet { tasks.sort(by: { $0.title < $1.title }) }
     }
     
-    private let taskRepository: TaskRepositoryPr
+    private let taskStorage: TaskStoragePr
     
-    init(taskRepository: TaskRepositoryPr) {
-        self.taskRepository = taskRepository
+    init(taskStorage: TaskStoragePr) {
+        self.taskStorage = taskStorage
     }
     
     func loadTasks() async throws {
-        tasks = try await taskRepository.loadTasks()
+        tasks = try await taskStorage.loadTasks()
     }
     
     func addTask(title: String, priority: TaskPriority, status: TaskStatus) async throws {
-        let task = try await taskRepository.addTask(title: title, priority: priority, status: status)
+        let task = try await taskStorage.addTask(title: title, priority: priority, status: status)
         tasks.append(task)
     }
     
@@ -49,7 +49,7 @@ class TaskManager: TaskManagerPr {
         guard let taskIndex = tasks.firstIndex(where: { $0.id == id }) else {
             throw TaskManagerError.wrongTaskId
         }
-        try await taskRepository.updateTask(byId: id, withTitle: title)
+        try await taskStorage.updateTask(byId: id, withTitle: title)
         tasks[taskIndex].title = title
     }
     
@@ -57,7 +57,7 @@ class TaskManager: TaskManagerPr {
         guard let taskIndex = tasks.firstIndex(where: { $0.id == id }) else {
             throw TaskManagerError.wrongTaskId
         }
-        try await taskRepository.updateTask(byId: id, withStatus: status)
+        try await taskStorage.updateTask(byId: id, withStatus: status)
         tasks[taskIndex].status = status
     }
     
@@ -65,7 +65,7 @@ class TaskManager: TaskManagerPr {
         guard let taskIndex = tasks.firstIndex(where: { $0.id == id }) else {
             throw TaskManagerError.wrongTaskId
         }
-        try await taskRepository.updateTask(byId: id, withPriority: priority)
+        try await taskStorage.updateTask(byId: id, withPriority: priority)
         tasks[taskIndex].priority = priority
     }
     
@@ -73,7 +73,7 @@ class TaskManager: TaskManagerPr {
         guard let taskIndex = tasks.firstIndex(where: { $0.id == id }) else {
             throw TaskManagerError.wrongTaskId
         }
-        try await taskRepository.removeTask(byId: id)
+        try await taskStorage.removeTask(byId: id)
         tasks.remove(at: taskIndex)
     }
 }

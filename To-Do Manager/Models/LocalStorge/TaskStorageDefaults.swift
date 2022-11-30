@@ -8,7 +8,7 @@
 import UIKit
 
 @MainActor
-class TaskStorageDefaults: TaskRepositoryPr {
+class TaskStorageDefaults: TaskStoragePr {
     
     private let defaults = UserDefaults.standard
     private let taskKey = "tasks"

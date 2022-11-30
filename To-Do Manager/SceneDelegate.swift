@@ -15,9 +15,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         let navigationController = UINavigationController()
-        var taskListViewController = ViewControllerFactory.taskListViewController
-        taskListViewController.taskManger = TaskManager(taskRepository: TaskApiClient())
+        let taskListViewController = ViewControllerFactory.taskListViewController
+        let taskManager = TaskManager(taskStorage: TaskWebStorage())
+        let taskListPresenter = TaskListPresenter(view: taskListViewController, taskManger: taskManager)
         
+        taskListViewController.presenter = taskListPresenter
         taskListViewController.push(toNavigationController: navigationController)
         
         window = UIWindow(windowScene: windowScene)

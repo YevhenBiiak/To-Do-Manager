@@ -36,9 +36,9 @@ class TaskCell: UITableViewCell {
         selectionStyle = .default
     }
     
-    func configure(withText text: String) {
+    func configureNoTasksCell() {
         symbolLabel.text = nil
-        titleLabel.text = text
+        titleLabel.text = "No Tasks"
         titleLabel.textColor = UIColor.tertiaryLabel
         titleLabel.font = UIFont.systemFont(ofSize: titleLabel.font.pointSize, weight: .regular)
         

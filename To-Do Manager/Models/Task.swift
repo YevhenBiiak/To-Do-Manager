@@ -8,13 +8,13 @@
 import Foundation
 
 // priority types of task
-enum TaskPriority: String, CaseIterable, Codable {
+enum TaskPriority: Int, CaseIterable, Codable {
     case important
     case normal
 }
 
-// complition status of task
-enum TaskStatus: String, CaseIterable, Codable {
+// completion status of task
+enum TaskStatus: Int, CaseIterable, Codable {
     case planned
     case completed
 }

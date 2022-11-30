@@ -1,5 +1,5 @@
 //
-//  TaskApiClient.swift
+//  TaskWebStorage.swift
 //  To-Do Manager
 //
 //  Created by Yevhen Biiak on 22.11.2022.
@@ -39,7 +39,7 @@ private struct DeletedTask: Decodable {
     var deletedOn: String
 }
 
-class TaskApiClient: TaskRepositoryPr {
+class TaskWebStorage: TaskStoragePr {
     
     private let userId = 1
     private let baseURL = "https://dummyjson.com/todos"
@@ -103,7 +103,7 @@ class TaskApiClient: TaskRepositoryPr {
     }
     
     func updateTask(byId id: String, withPriority priority: TaskPriority) async throws {
-        // api has no priority property
+        // api task has no priority
     }
     
     func removeTask(byId id: String) async throws {
