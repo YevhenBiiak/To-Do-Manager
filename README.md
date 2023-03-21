@@ -2,7 +2,8 @@
 
 ### Description:
 
-This project is a task manager app developed for iOS devices. The application is designed for users to keep and track current and completed tasks. It allows users to create, edit and delete tasks, set their priority and status - their place in the task list will depend on it. In this app are considered different solutions for task storage, such as UserDefaults, Realm, and remote API. Users can also sort tasks by title, priority, and status. The sorting can be done by simply dragging the task to another category.
+This project is a task manager app developed for iOS devices. The application is designed for users to keep and track current and completed tasks. It allows users to create, edit and delete tasks, set their priority and status - their place in the task list will depend on it. In this app are considered different solutions for task storage, such as UserDefaults, Realm, and remote API. Users can also sort tasks by title, priority, and status. The sorting can be done by simply dragging the task to another category.  
+This project also considers the use of .xib
 
 ## Features:
 
