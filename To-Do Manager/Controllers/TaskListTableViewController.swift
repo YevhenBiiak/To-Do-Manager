@@ -7,8 +7,6 @@
 
 import UIKit
 
-typealias AsyncTask = _Concurrency.Task
-
 protocol TaskListViewControllerPr: AnyObject, NavigatableViewControllerPr {
     var presenter: TaskListPresenterPr! { get set }
     func display(tasks: [[Task]])
@@ -25,11 +23,7 @@ class TaskListTableViewController: UITableViewController, TaskListViewController
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        navigationItem.leftBarButtonItem = editButtonItem
-        tableView.refreshControl = UIRefreshControl()
-        tableView.refreshControl?.addTarget(self, action: #selector(refreshControlAction), for: .valueChanged)
-        
+        setupViews()
         presenter.viewDidLoad()
     }
     
@@ -48,6 +42,40 @@ class TaskListTableViewController: UITableViewController, TaskListViewController
     
     // MARK: - Private Actions
     
+    private func setupViews() {
+        // add edit button to the leftBarButtonItem
+        navigationItem.leftBarButtonItem = editButtonItem
+        
+        // setup refreshControl
+        tableView.refreshControl = UIRefreshControl()
+        tableView.refreshControl?.addTarget(self, action: #selector(refreshControlAction), for: .valueChanged)
+        
+        // add "Add task button"
+        let image = UIImage(
+            systemName: "plus",
+            withConfiguration: UIImage.SymbolConfiguration(pointSize: 20, weight: .bold).applying(
+                               UIImage.SymbolConfiguration(paletteColors: [.white])))
+        
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = .tintColor
+        button.layer.cornerRadius = 10
+        button.setImage(image, for: .normal)
+        button.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
+        
+        // add subview
+        view.addSubview(button)
+        let bottomInset = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.keyWindow?.safeAreaInsets.bottom ?? 0
+        
+        // set constraints
+        button.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor,
+                                      constant: -(bottomInset == 0 ? 16 : bottomInset)).isActive = true
+        button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,
+                                       constant: -(bottomInset == 0 ? 16 : 8)).isActive = true
+        button.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 60).isActive = true
+    }
+    
     @objc private func refreshControlAction(refreshControl: UIRefreshControl) {
         presenter.didRefreshTable()
         refreshControl.endRefreshing()
@@ -57,7 +85,7 @@ class TaskListTableViewController: UITableViewController, TaskListViewController
         presenter.didTapSortButton()
     }
     
-    @IBAction private func addButtonTapped(_ sender: UIBarButtonItem) {
+    @objc private func addButtonTapped(_ sender: UIButton) {
         presenter.didTapAddButton()
     }
 

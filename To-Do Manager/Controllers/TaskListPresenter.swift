@@ -7,6 +7,8 @@
 
 import Foundation
 
+typealias AsyncTask = _Concurrency.Task
+
 protocol TaskManagerPr {
     var tasks: [Task] { get }
     func loadTasks() async throws
@@ -27,10 +29,6 @@ protocol TaskListPresenterPr {
     func didMoveTask(_ task: Task, toSection section: Int)
     func didChangeStatus(forTask task: Task, with status: TaskStatus)
     func title(forSection section: Int) -> String?
-    
-//    func userDidChange(sortOption: SortedBy)
-    
-//    func userDidTapSaveButton(withTask task: Task)
 }
 
 enum SortedBy { case status, priority }
@@ -43,9 +41,9 @@ class TaskListPresenter: TaskListPresenterPr {
     private var sortedBy: SortedBy = .status
     private var tasks: [Task] { taskManger.tasks }
     
-    init(view: TaskListViewControllerPr, taskManger: TaskManagerPr!) {
+    init(view: TaskListViewControllerPr, taskManager: TaskManagerPr!) {
         self.taskListView = view
-        self.taskManger = taskManger
+        self.taskManger = taskManager
     }
     
     func viewDidLoad() {
@@ -100,7 +98,7 @@ class TaskListPresenter: TaskListPresenterPr {
     func didChangeStatus(forTask task: Task, with status: TaskStatus) {
         updateTask(byId: task.id, status: status)
     }
-        
+    
     func title(forSection section: Int) -> String? {
         switch sortedBy {
         case .status:   return TaskStatus(section: section)?.description
@@ -137,7 +135,6 @@ class TaskListPresenter: TaskListPresenterPr {
                 taskListView?.display(tasks: sortedTasks())
             } catch {
                 taskListView?.displayError(title: error.localizedDescription, message: nil)
-                // reloadData(animated: true)
             }
         }
     }
